@@ -16,10 +16,27 @@ fastqc --extract -o fastqc_DRIP_seq_08_18 --contaminants /home/univ3533/anaconda
 
 trim_galore -q 20 --illumina --fastqc --trim-n --paired 6E-A-IP_S3_L001_R1_001.fastq.gz 6E-A-IP_S3_L001_R2_001.fastq.gz
 
+
+
 # Following Trim-Galore, use zcat to combine files from the four lanes. keep pairs separate:
+
 zcat 6E-A-IP_S3_L001_R1_val1.fq.gz 6E-A-IP_S3_L002_R1_val1.fq.gz 6E-A-IP_S3_L003_R1_val1.fq.gz 6E-A-IP_S3_L004_R1_val1.fq.gz >6E-A-IP_R1_merged.fq
 
 gzip 6E-A-IP-R1_merged.fq
+
+
+# Because Drosophila DNA was used as a spike-in, download hthe drosophila genome to build a combined genome-file for the alignemt step.
+# Then, combine the hg38NoAltNoHap.fa file with the drosophila fasta files:
+
+gunzip Drosophila_melanogaster.BDGP6.dna.toplevel.fa.gz
+cat hg38NoAltNoHap.fa Drosophila_melanogaster.BDGP1.dna.toplevel.fa >hg38_NoAlt_NoHap_w_Dro_spikein.fa
+
+
+# Build combined genome using bowtie2-build (-f: indicates that the reference input is a fasta/.fa file):
+
+bowtie2-build -f hg38_NoAlt_NoHap_w_Dro_spikein.fa hg38_w_dro_spikein_genome >genome_build_report.log 
+
+
 
 
 
