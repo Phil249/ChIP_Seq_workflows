@@ -38,6 +38,25 @@ bowtie2-build -f hg38_NoAlt_NoHap_w_Dro_spikein.fa hg38_w_dro_spikein_genome >ge
 
 
 
+# Perform bowtie2 alignment (-q: input files are fastq; -k: faster reporting option; --maxins: max fragment length)
+
+bowtie2 -q -k 2 --maxins 700 -x hg38_w_dro_spikein_genome -1 6E-A-IP_R1_merged.fq -2 6E-A-IP_R2_merged.fq.gz | samtools -bS - > 6E_A_IP_aligned.bam
+
+
+
+# Use samtools to sort, then index bam files:
+
+samtools sort 6E_A_IP_aligned.bam 6E_A_IP_sorted.bam
+
+samtools index 6E_A_IP_sorted.bam
+
+
+
+# Use samtools idxstats to generate txt files containing read counts for each chromosome. Use this for spike-in normalization based on reads on drosophila chromosomes (2L, 2R, 3L, 3R, 4, X, Y):
+
+samtools idxstats 6E_A_IP_sorted.bam >6E_A_IP_idxstat.txt
+
+
 
 
 
