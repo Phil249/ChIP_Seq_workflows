@@ -58,7 +58,20 @@ samtools idxstats 6E_A_IP_sorted.bam >6E_A_IP_idxstat.txt
 
 
 
+# Calculate scaling factors and then convert files into bedgraph files:
 
+bedtools genomecov -bg -scale XX -ibam 6E_A_T_sorted.bam.bam > 6E_A_T.bedGraph
+
+
+
+# Filter out all drosophila reads by keeping all lines that start with chr (drosophila reads only have the number of the chr, not "chr" at the start of each line)
+
+grep '^chr' 6E_A_T.bedGraph > 6E_A_T_filtered.bedGraph
+
+
+
+# Convert into bigWig file:
+wigToBigWig 6E_A_T_filtered.bedGraph hg38_chrom_sizes.txt 6E_A_T.bw
 
 
 
