@@ -1,0 +1,36 @@
+# Download SRR915821 fastq file (Pol III ChIP-Seq in Adipose derived stem cells), Alla et al., 2014
+
+
+fastqc --extract --contaminants /home/univ3533/anaconda3/pkgs/fastqc-0.11.7-pl5.22.0_1/opt/fastqc/0.11.7/Configuration/contaminant_list.txt *
+
+
+
+
+# Building a hg38 genome (no spike-ins)
+
+bowtie2-build -f hg38NoAltNoHap.fa hg38_genome >genome_build_report.log
+
+
+# Alignment with bowtie to hg38:
+
+bowtie2 -q -k 2 -x hg38_genome SRR915821.fastq -S POLIII_alignment.sam
+
+
+# convert to bam file:
+
+samtools view -S -b POLIII_alignment.sam > POLIII_alignment.bam
+
+# Sort and index bam file:
+
+samtools sort POLIII_alignment.bam POLIII_alignment_sorted.bam
+samtools index POLIII_alignment_sorted.bam.bam
+
+
+
+# Convert to bedGraph, then bigwig:
+
+bedtools genomecov -bg -ibam POLIII_alignment_sorted.bam.bam > POLIII_ChIP.bedGraph
+wigToBigWig POLIII_ChIP.bedGraph hg38_chrom_sizes.txt POLIII_ChIP.bw
+
+
+
