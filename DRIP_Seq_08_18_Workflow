@@ -74,5 +74,5 @@ grep '^chr' 6E_A_T.bedGraph > 6E_A_T_filtered.bedGraph
 wigToBigWig 6E_A_T_filtered.bedGraph hg38_chrom_sizes.txt 6E_A_T.bw
 
 # Peak calling
-macs2 callpeak -t 6E_A_IP_filtered.bedgraph -c 6E_A_T_filtered.bedgraph -g hs -n 6E_A_IP_peaks --broad
+macs2 callpeak -t 6E_A_IP_filtered.bedgraph -c 6E_A_T_filtered.bedgraph -g hs -n 6E_A_IP_peaks --broad --nomodel
 
